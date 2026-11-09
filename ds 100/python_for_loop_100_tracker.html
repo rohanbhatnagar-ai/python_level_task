@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python For Loop — 100 Question Tracker</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e9f2;--green:#16834a;--greenbg:#e8f6ee;--yellow:#a86b00;--yellowbg:#fff4d8;--red:#c03936;--redbg:#ffebea;--blue:#315fca}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:#14213d;color:#fff;padding:30px 18px}header .wrap,main{max-width:980px;margin:auto}h1{margin:0 0 6px;font-size:clamp(25px,4vw,36px)}header p{margin:0;color:#d7deec}
+main{padding:22px 16px 48px}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}.stat,.panel,.question{background:var(--card);border:1px solid var(--line);border-radius:14px}
+.stat{padding:14px}.stat strong{display:block;font-size:25px}.stat span{color:var(--muted);font-size:13px}
+.panel{padding:16px;margin-bottom:16px}.progress-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.bar{height:11px;background:#edf0f5;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);transition:width .2s}
+.controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}input,select,button{font:inherit;border-radius:9px;border:1px solid var(--line);padding:10px 12px;background:#fff;color:var(--text)}input{flex:1;min-width:190px}button{cursor:pointer;font-weight:600}button.primary{background:var(--blue);border-color:var(--blue);color:white}button.reset{color:var(--red)}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 10px;gap:10px}.section-title h2{font-size:19px;margin:0}.tag{font-size:12px;padding:4px 9px;border-radius:99px;font-weight:700}.easy{background:var(--greenbg);color:var(--green)}.medium{background:var(--yellowbg);color:var(--yellow)}.hard{background:var(--redbg);color:var(--red)}
+.question{padding:13px 14px;margin-bottom:8px;display:grid;grid-template-columns:25px 1fr auto;gap:10px;align-items:start}.question.done{border-color:#b9e2c9;background:#fbfffc}.question input{min-width:0;width:18px;height:18px;margin:3px 0 0;accent-color:var(--green)}.qtext{font-weight:550}.qmeta{font-size:12px;color:var(--muted);white-space:nowrap}.empty{color:var(--muted);text-align:center;padding:30px}
+footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+@media(max-width:620px){.summary{grid-template-columns:repeat(2,1fr)}.question{grid-template-columns:24px 1fr}.qmeta{grid-column:2;white-space:normal}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Python For Loop — 100 Questions</h1><p>Beginner se advanced tak • Practice, tick off, and track your progress</p></div></header>
+<main>
+  <div class="summary">
+    <div class="stat"><strong id="totalDone">0/100</strong><span>Completed</span></div>
+    <div class="stat"><strong id="easyDone">0/40</strong><span>Easy completed</span></div>
+    <div class="stat"><strong id="mediumDone">0/40</strong><span>Medium completed</span></div>
+    <div class="stat"><strong id="hardDone">0/20</strong><span>Hard completed</span></div>
+  </div>
+  <section class="panel">
+    <div class="progress-head"><strong>Overall progress</strong><strong id="percent">0%</strong></div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search questions...">
+      <select id="filter"><option value="all">All difficulty levels</option><option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option><option value="pending">Not completed</option><option value="done">Completed</option></select>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+  </section>
+  <div id="questions"></div>
+  <footer>Your progress is saved in this browser on this device. Download and keep this HTML file to reopen your tracker.</footer>
+</main>
+<script>
+const groups = [
+{level:"Easy",items:[
+"Print numbers from 1 to 10 using a for loop.",
+"Print numbers from 1 to N. Take N from the user.",
+"Print numbers from N down to 1.",
+"Print all even numbers from 1 to 50.",
+"Print all odd numbers from 1 to 50.",
+"Print numbers divisible by 3 between 1 and 100.",
+"Print numbers divisible by both 3 and 5 between 1 and 100.",
+"Find the sum of numbers from 1 to N.",
+"Find the sum of all even numbers from 1 to N.",
+"Find the sum of all odd numbers from 1 to N.",
+"Print the multiplication table of a given number.",
+"Print multiplication tables from 1 to 5.",
+"Count how many numbers from 1 to N are divisible by 4.",
+"Print squares of numbers from 1 to N.",
+"Print cubes of numbers from 1 to N.",
+"Calculate the product of numbers from 1 to N.",
+"Print every second number from 1 to 30.",
+"Print numbers between 1 and 100 that end in 7.",
+"Find the sum of numbers divisible by 7 from 1 to N.",
+"Print a message 5 times using a for loop.",
+"Count down from 10 to 0.",
+"Print the first N natural numbers and their squares.",
+"Find the average of numbers from 1 to N.",
+"Print all numbers between A and B (inclusive).",
+"Find the sum of numbers between A and B.",
+"Count how many numbers between 1 and N are multiples of 2 or 5.",
+"Print the first 10 multiples of a user-given number.",
+"Display each character of a word on a new line using a for loop.",
+"Count the characters in a string without using len().",
+"Count vowels in a given string using a for loop.",
+"Count consonants in a given string using a for loop.",
+"Count uppercase and lowercase letters in a string.",
+"Find the sum of all items in a list without using sum().",
+"Count even and odd values in a list.",
+"Find the largest number in a list without using max().",
+"Find the smallest number in a list without using min().",
+"Print each item of a list with its index using a loop.",
+"Create a new list containing the squares of the original list values.",
+"Count how many times a given value appears in a list.",
+"Print only positive numbers from a list."
+]},
+{level:"Medium",items:[
+"Find the factorial of a number using a for loop.",
+"Check whether a number is prime using a for loop.",
+"Print all prime numbers between 1 and N.",
+"Count the factors of a given number.",
+"Print all factors of a given number.",
+"Check whether a number is a perfect number.",
+"Check whether a number is an Armstrong number.",
+"Reverse the digits of a number using a loop.",
+"Find the sum of digits of a number.",
+"Count the digits in a number without converting it to a string.",
+"Check whether a number is a palindrome using a loop.",
+"Find the product of the digits of a number.",
+"Find the largest digit in a number.",
+"Find the smallest digit in a number.",
+"Count how many digits are even and how many are odd.",
+"Print the Fibonacci sequence for N terms using a for loop.",
+"Find the GCD of two numbers using a for loop.",
+"Find the LCM of two numbers using a loop.",
+"Print all perfect numbers in a given range.",
+"Print all Armstrong numbers in a given range.",
+"Reverse a string using a for loop without slicing.",
+"Check whether a string is a palindrome using a loop.",
+"Count the frequency of each character in a string using a dictionary and loop.",
+"Build a new string with spaces removed without using replace().",
+"Find the first occurrence index of a character without using find().",
+"Find the second-largest distinct number in a list using loops.",
+"Remove duplicates from a list while preserving order, without using set().",
+"Create separate lists for positive, negative, and zero values.",
+"Find common elements in two lists using nested loops.",
+"Create a dictionary that stores each list element and its frequency.",
+"Find the index of the largest item in a list.",
+"Check whether a list is sorted in ascending order.",
+"Reverse a list using a for loop without slicing or reverse().",
+"Find all pairs in a list whose sum equals a target, using nested loops.",
+"Flatten a one-level nested list using nested loops.",
+"Print a right-angled triangle of stars for N rows.",
+"Print an inverted right-angled triangle of stars.",
+"Print a number triangle: 1 / 1 2 / 1 2 3, up to N rows.",
+"Print a multiplication table grid from 1 to 10 using nested loops.",
+"Find the row with the largest sum in a 2D list."
+]},
+{level:"Hard",items:[
+"Print a centered pyramid of stars for N rows using nested loops.",
+"Print a hollow square pattern of stars of size N.",
+"Print a hollow right-angled triangle of stars.",
+"Print a diamond star pattern for a given odd height.",
+"Print a Pascal's triangle for N rows using loops.",
+"Generate all prime pairs whose sum equals a given even number.",
+"Find all three-number combinations in a list whose sum equals a target.",
+"Find the longest consecutive run of the same value in a list.",
+"Find the longest word in a sentence using loops without max().",
+"Find the most frequent character in a string; handle ties.",
+"Group words by their first letter using a dictionary and loops.",
+"Transpose a matrix using nested loops.",
+"Add two matrices using nested loops.",
+"Multiply two matrices using nested loops.",
+"Find the sum of both diagonals of a square matrix.",
+"Print a number spiral pattern of size N x N.",
+"Find all pairs of amicable numbers within a given range.",
+"Convert a decimal number to binary using repeated division and a loop.",
+"Convert a binary number represented as a string to decimal using a loop.",
+"Build a simple menu-driven pattern printer that repeats until the user chooses Exit."
+]}
+];
+let completed = new Set(JSON.parse(localStorage.getItem("forLoop100Done") || "[]"));
+const root=document.getElementById("questions");
+function render(){
+ const query=document.getElementById("search").value.toLowerCase();
+ const filter=document.getElementById("filter").value;
+ root.innerHTML="";
+ let id=0;
+ groups.forEach(group=>{
+   const startId=id+1; const groupItems=[];
+   group.items.forEach(q=>{id++;const done=completed.has(id);if((!query||q.toLowerCase().includes(query))&&(filter==="all"||filter===group.level||(filter==="done"&&done)||(filter==="pending"&&!done)))groupItems.push({id,q,done});});
+   if(groupItems.length){
+    const h=document.createElement("div");h.className="section-title";
+    const count=group.items.filter((_,i)=>completed.has(startId+i)).length;
+    h.innerHTML=`<h2>${group.level} <span class="tag ${group.level.toLowerCase()}">${group.items.length} questions</span></h2><span class="qmeta">${count}/${group.items.length} completed</span>`;
+    root.appendChild(h);
+    groupItems.forEach(item=>{
+      const row=document.createElement("label");row.className="question"+(item.done?" done":"");
+      const cb=document.createElement("input");cb.type="checkbox";cb.checked=item.done;cb.setAttribute("aria-label","Mark question "+item.id+" complete");
+      cb.addEventListener("change",()=>{if(cb.checked)completed.add(item.id);else completed.delete(item.id);localStorage.setItem("forLoop100Done",JSON.stringify([...completed]));render();});
+      const text=document.createElement("span");text.className="qtext";text.textContent=`Q${item.id}. ${item.q}`;
+      const meta=document.createElement("span");meta.className="qmeta";meta.textContent=item.done?"Done":"Pending";
+      row.append(cb,text,meta);root.appendChild(row);
+    });
+   }
+ });
+ if(!root.children.length)root.innerHTML='<div class="empty">No matching questions found.</div>';
+ updateStats();
+}
+function updateStats(){
+ const total=completed.size, easy=[...completed].filter(n=>n<=40).length, medium=[...completed].filter(n=>n>=41&&n<=80).length, hard=[...completed].filter(n=>n>=81&&n<=100).length;
+ document.getElementById("totalDone").textContent=`${total}/100`;
+ document.getElementById("easyDone").textContent=`${easy}/40`;
+ document.getElementById("mediumDone").textContent=`${medium}/40`;
+ document.getElementById("hardDone").textContent=`${hard}/20`;
+ const p=Math.round(total);document.getElementById("percent").textContent=p+"%";document.getElementById("fill").style.width=p+"%";
+}
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("filter").addEventListener("change",render);
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Reset all 100 question progress?")){completed.clear();localStorage.removeItem("forLoop100Done");render();}});
+render();
+</script>
+</body>
+</html>
